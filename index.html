@@ -78,7 +78,7 @@ body {
 #cal-header {
   position: sticky; top: 0; z-index: 10;
   background: #1a0806;
-  padding-top: env(safe-area-inset-top, 0px);
+  padding-top: max(env(safe-area-inset-top, 0px), 44px);
   border-bottom: 1px solid var(--border);
   padding: 0 20px;
   display: flex; align-items: center; gap: 12px;
@@ -580,6 +580,7 @@ body {
   top: 0;
   z-index: 10;
   background: #1a0806;
+  padding-top: max(env(safe-area-inset-top, 0px), 44px);
   padding-top: env(safe-area-inset-top, 0px);
   padding: 0 20px;
   display: flex;
@@ -616,7 +617,7 @@ body {
 }
 .icon-btn:hover { border-color: var(--red); color: var(--red); }
 
-#wallet-header { position: sticky; top: 0; border-bottom: 1px solid var(--border); padding-top: env(safe-area-inset-top, 0px); }
+#wallet-header { position: sticky; top: 0; border-bottom: 1px solid var(--border); }
 
 /* stats */
 #stats-bar {
@@ -1621,13 +1622,13 @@ function load() {
       tickets = [{
         id: '1000000000001',
         style: 'punched',
-        name: 'MELBOURNE',
-        sub: 'Zhou Sihui · 2026',
-        date: '2026-10-30',
-        cinema: 'CGV国贸',
-        hall: 'HALL 7',
-        seat: 'Z-11',
-        price: '69',
+        name: 'HAPPY BIRTHDAY',
+        sub: 'MOMO · 2026',
+        date: '2026-10-23',
+        cinema: 'Daydream',
+        hall: '—',
+        seat: '218',
+        price: '33',
         note: '',
         photo: MELB_IMG,
         poster: '',
@@ -2265,20 +2266,18 @@ function initStylePickerThumbs() {
 
 // ── init ──────────────────────────────────────────────────
 load(); checkBday(); updateCover(); updateStats(); renderAll(); buildCoverBarcode();
-// Set a random ticket image on the cover paper
-(function(){
+// Set a random ticket image on the cover paper — run after DOM ready
+function initCoverPaper() {
   const imgs = [TICKET_IMG_CREAM, TICKET_IMG_PINK, TICKET_IMG_TEAL, TICKET_IMG_GOLD, TICKET_IMG_LAVENDER];
   const el = document.getElementById('cover-paper-img');
   const paper = document.getElementById('cover-paper');
-  const stored = localStorage.getItem('yingpiaojia_v4');
-  let hasTickets = false;
-  try { const d = JSON.parse(stored||'{}'); hasTickets = (d.tickets||[]).length > 0; } catch(e){}
-  if (el && hasTickets) {
+  if (tickets.length > 0 && el) {
     el.src = imgs[Math.floor(Math.random() * imgs.length)];
   } else if (paper) {
     paper.style.display = 'none';
   }
-})();
+}
+initCoverPaper();
 initStylePickerThumbs();
 
 // ── PWA: inline manifest ─────────────────────────────────
