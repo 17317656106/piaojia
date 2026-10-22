@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="票夹">
 <meta name="theme-color" content="#2a0e0a">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' fill='%232a0e0a'/%3E%3Crect x='20' y='55' width='140' height='70' rx='4' fill='%23c8a84b' opacity='.15'/%3E%3Crect x='20' y='55' width='140' height='70' rx='4' fill='none' stroke='%23c8a84b' stroke-width='2' opacity='.5'/%3E%3Crect x='20' y='55' width='28' height='70' rx='4' fill='%23c0392b' opacity='.4'/%3E%3Ctext x='90' y='97' font-family='serif' font-size='28' font-weight='bold' fill='%23f0e8d0' text-anchor='middle' letter-spacing='2'%3E票夹%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='20' fill='%23f5e6c0'/%3E%3Crect x='14' y='52' width='152' height='76' rx='6' fill='%23e8d49a' stroke='%23c0392b' stroke-width='3'/%3E%3Crect x='14' y='52' width='152' height='76' rx='6' fill='none' stroke='%23c0392b' stroke-width='6'/%3E%3Ccircle cx='14' cy='90' r='10' fill='%23f5e6c0'/%3E%3Ccircle cx='166' cy='90' r='10' fill='%23f5e6c0'/%3E%3Cline x1='24' y1='90' x2='156' y2='90' stroke='%23c0392b' stroke-width='1.5' stroke-dasharray='4 3'/%3E%3Crect x='14' y='52' width='38' height='76' rx='6' fill='%23c0392b' opacity='.15'/%3E%3Ctext x='90' y='82' font-family='Georgia,serif' font-size='13' font-weight='bold' fill='%23c0392b' text-anchor='middle' letter-spacing='3'%3ECINEMA%3C/text%3E%3Ctext x='90' y='100' font-family='Georgia,serif' font-size='20' font-weight='bold' fill='%232a0e0a' text-anchor='middle' letter-spacing='1'%3ETICKET%3C/text%3E%3Ctext x='90' y='116' font-family='Georgia,serif' font-size='9' fill='%23c0392b' text-anchor='middle' letter-spacing='2'%3EADMIT ONE%3C/text%3E%3C/svg%3E">
 <title>Ticket Wallet</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Special+Elite&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&family=Bebas+Neue&family=Oswald:wght@400;600;700&display=swap">
 <style>
@@ -78,6 +78,7 @@ body {
 #cal-header {
   position: sticky; top: 0; z-index: 10;
   background: #1a0806;
+  padding-top: env(safe-area-inset-top, 0px);
   border-bottom: 1px solid var(--border);
   padding: 0 20px;
   display: flex; align-items: center; gap: 12px;
@@ -576,9 +577,10 @@ body {
 
 #wallet-header {
   position: sticky;
-  top: env(safe-area-inset-top, 0px);
+  top: 0;
   z-index: 10;
   background: #1a0806;
+  padding-top: env(safe-area-inset-top, 0px);
   padding: 0 20px;
   display: flex;
   align-items: center;
@@ -614,7 +616,7 @@ body {
 }
 .icon-btn:hover { border-color: var(--red); color: var(--red); }
 
-#wallet-header { position: sticky; top: 0; border-bottom: 1px solid var(--border); }
+#wallet-header { position: sticky; top: 0; border-bottom: 1px solid var(--border); padding-top: env(safe-area-inset-top, 0px); }
 
 /* stats */
 #stats-bar {
@@ -2267,7 +2269,15 @@ load(); checkBday(); updateCover(); updateStats(); renderAll(); buildCoverBarcod
 (function(){
   const imgs = [TICKET_IMG_CREAM, TICKET_IMG_PINK, TICKET_IMG_TEAL, TICKET_IMG_GOLD, TICKET_IMG_LAVENDER];
   const el = document.getElementById('cover-paper-img');
-  if (el) el.src = imgs[Math.floor(Math.random() * imgs.length)];
+  const paper = document.getElementById('cover-paper');
+  const stored = localStorage.getItem('yingpiaojia_v4');
+  let hasTickets = false;
+  try { const d = JSON.parse(stored||'{}'); hasTickets = (d.tickets||[]).length > 0; } catch(e){}
+  if (el && hasTickets) {
+    el.src = imgs[Math.floor(Math.random() * imgs.length)];
+  } else if (paper) {
+    paper.style.display = 'none';
+  }
 })();
 initStylePickerThumbs();
 
